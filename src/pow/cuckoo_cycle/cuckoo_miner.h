@@ -233,7 +233,11 @@ public:
   uint16_t proofsize_min;
   uint16_t proofsize_max;
   pthread_barrier_t barry;
+#if ATOMIC
   std::atomic<bool> abort;
+#else
+  bool abort;
+#endif
 
   cuckoo_ctx(u32 n_threads, u32 n_trims, u32 max_sols, uint16_t proofsize_min_in, uint16_t proofsize_max_in) {
     abort = false;
