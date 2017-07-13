@@ -89,7 +89,11 @@ public:
     int next_nonce;
     static int last_err;               ///< last error after call to is_valid()
     bool external_nonce;
+#if ATOMIC
     std::atomic<bool>* pAbort;
+#else
+    bool* pAbort;
+#endif
     cuckoo_cycle(cc_challenge_ref c_in, callback_ref cb_in = nullptr, bool external_nonce_in = true)
     : pow(POWID_CUCKOO_CYCLE, c_in, cb_in), thread(nullptr), c(c_in), next_nonce(0), external_nonce(external_nonce_in), pAbort(NULL) {}
     ~cuckoo_cycle();
