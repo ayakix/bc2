@@ -64,7 +64,7 @@ bool cuckoo_cycle::solve_async(uint32_t thread_count) { // asynchronous
     ctx = new cuckoo_ctx(thread_count, ntrims, 8, c->proofsize_min, c->proofsize_max);
     pAbort = &ctx->abort;
     while (state == state_running) {
-        printf("CC: solve_async() entering loop\n");
+        printf("CC: solve_async() entering loop (ss=%d)\n", SIZESHIFT);
         if (external_nonce) {
             ctx->setheadernonce(ws, wx, nonce);
         } else {

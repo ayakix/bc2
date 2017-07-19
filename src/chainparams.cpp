@@ -302,12 +302,9 @@ public:
         nPruneAfterHeight = 100000;
 
         std::vector<uint32_t> vEdges{
-            1409485, 3789529, 5371692, 6129924, 6681319, 7028467, 8837407, 15464272, 17576893, 19032192, 20577624, 20631626,
-            21597368, 23555556, 25244627, 25330094, 26483188, 26894653, 28257925, 29032109, 29121948, 32493275, 36840805,
-            36955569, 38233849, 41333142, 44170781, 45702087, 45746177, 49645459, 52369294, 52789153, 55792309, 56770930,
-            61727178, 64753429, 65493219, 67285582, 68759304, 78275336, 82306507, 83680274, 84590365, 84753477, 85478477,
-            86256972, 88510298, 88900836, 90473349, 97441439, 98687694, 100474176, 109541059, 116372748, 122000550,
-            122413502, 123392522, 123616273
+            3170569, 7709365, 8434124, 9566912, 12689853, 13626756, 15039956, 17480913, 17808123, 25916406, 27171229, 27649123,
+            29716179, 30378050, 33302243, 34018652, 34188251, 35779080, 38061203, 38683231, 38925535, 40849629, 41593143,
+            47212997, 56346564, 57446047, 60082516, 64314509, 64361214, 64925491, 65058827, 65415892
         };
         // uint32_t powCompact = UintToArith256(consensus.powLimit).GetCompact();
         // printf(
@@ -315,9 +312,9 @@ public:
         //     "=       0x%08x\n"
         //     , consensus.powLimit.ToString().c_str(), powCompact
         // );
-        genesis = CreateGenesisBlock(1496312816, 1, 0x207fffff, 1, 50 * COIN, &vEdges);
+        genesis = CreateGenesisBlock(1496312816, 5, 0x207fffff, 1, 50 * COIN, &vEdges);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x437840ad883e641b9659c8a70cb0e2c19466d9d0386dc323ee73e36c252694b0"));
+        assert(consensus.hashGenesisBlock == uint256S("0x4b6f5d5f7d4fbc3cc1a901175a87141f457657f48e3544425333d854deaec894"));
         assert(genesis.hashMerkleRoot == uint256S("0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
@@ -343,7 +340,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                { 0, uint256S("0x437840ad883e641b9659c8a70cb0e2c19466d9d0386dc323ee73e36c252694b0")}
+                { 0, uint256S("0x4b6f5d5f7d4fbc3cc1a901175a87141f457657f48e3544425333d854deaec894")}
             }
         };
 
