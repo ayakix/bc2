@@ -297,7 +297,7 @@ public:
         pchMessageStart[1] = 0xee;
         pchMessageStart[2] = 0x8c;
         pchMessageStart[3] = 0xe5;
-        nDefaultPort = 9232;
+        nDefaultPort = 10232;
         nPruneAfterHeight = 100000;
 
         std::vector<uint32_t> vEdges{
