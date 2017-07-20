@@ -112,48 +112,53 @@ bool processNonce(CBlock* pblock)
 
 UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbaseScript, int nGenerate, uint64_t nMaxTries, bool keepScript)
 {
-    static const int nInnerLoopCount = 0x10000;
-    int nHeightEnd = 0;
-    int nHeight = 0;
-
-    {   // Don't keep cs_main locked
-        LOCK(cs_main);
-        nHeight = chainActive.Height();
-        nHeightEnd = nHeight+nGenerate;
-    }
-    unsigned int nExtraNonce = 0;
-    UniValue blockHashes(UniValue::VARR);
-    while (nHeight < nHeightEnd)
+    printf("[mining] locking cs_miner\n");
     {
-        std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params()).CreateNewBlock(coinbaseScript->reserveScript));
-        if (!pblocktemplate.get())
-            throw JSONRPCError(RPC_INTERNAL_ERROR, "Couldn't create new block");
-        CBlock *pblock = &pblocktemplate->block;
-        {
-            LOCK(cs_main);
-            IncrementExtraNonce(pblock, chainActive.Tip(), nExtraNonce);
-        }
-        while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount && (!processNonce(pblock) || !CheckProofOfWork(pblock->GetHash(), pblock->nBits, Params().GetConsensus()))) {
-            printf("[mining] incrementing nonce (hash=%s, CheckPOW=%s)\n", pblock->GetHash().ToString().c_str(), CheckProofOfWork(pblock->GetHash(), pblock->nBits, Params().GetConsensus()) ? "true" : "false");
-            ++pblock->nNonce;
-            --nMaxTries;
-        }
-        if (nMaxTries == 0) {
-            break;
-        }
-        if (pblock->nNonce == nInnerLoopCount) {
-            continue;
-        }
-        std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
-        if (!ProcessNewBlock(Params(), shared_pblock, true, NULL))
-            throw JSONRPCError(RPC_INTERNAL_ERROR, "ProcessNewBlock, block not accepted");
-        ++nHeight;
-        blockHashes.push_back(pblock->GetHash().GetHex());
+        LOCK(cs_miner);
 
-        //mark script as important because it was used at least for one coinbase output if the script came from the wallet
-        if (keepScript)
+        static const int nInnerLoopCount = 0x10000;
+        int nHeightEnd = 0;
+        int nHeight = 0;
+
+        {   // Don't keep cs_main locked
+            LOCK(cs_main);
+            nHeight = chainActive.Height();
+            nHeightEnd = nHeight+nGenerate;
+        }
+        unsigned int nExtraNonce = 0;
+        UniValue blockHashes(UniValue::VARR);
+        while (nHeight < nHeightEnd)
         {
-            coinbaseScript->KeepScript();
+            std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params()).CreateNewBlock(coinbaseScript->reserveScript));
+            if (!pblocktemplate.get())
+                throw JSONRPCError(RPC_INTERNAL_ERROR, "Couldn't create new block");
+            CBlock *pblock = &pblocktemplate->block;
+            {
+                LOCK(cs_main);
+                IncrementExtraNonce(pblock, chainActive.Tip(), nExtraNonce);
+            }
+            while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount && (!processNonce(pblock) || !CheckProofOfWork(pblock->GetHash(), pblock->nBits, Params().GetConsensus()))) {
+                printf("[mining] incrementing nonce (hash=%s, CheckPOW=%s)\n", pblock->GetHash().ToString().c_str(), CheckProofOfWork(pblock->GetHash(), pblock->nBits, Params().GetConsensus()) ? "true" : "false");
+                ++pblock->nNonce;
+                --nMaxTries;
+            }
+            if (nMaxTries == 0) {
+                break;
+            }
+            if (pblock->nNonce == nInnerLoopCount) {
+                continue;
+            }
+            std::shared_ptr<const CBlock> shared_pblock = std::make_shared<const CBlock>(*pblock);
+            if (!ProcessNewBlock(Params(), shared_pblock, true, NULL))
+                throw JSONRPCError(RPC_INTERNAL_ERROR, "ProcessNewBlock, block not accepted");
+            ++nHeight;
+            blockHashes.push_back(pblock->GetHash().GetHex());
+
+            //mark script as important because it was used at least for one coinbase output if the script came from the wallet
+            if (keepScript)
+            {
+                coinbaseScript->KeepScript();
+            }
         }
     }
     return blockHashes;
