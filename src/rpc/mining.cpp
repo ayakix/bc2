@@ -102,7 +102,7 @@ bool processNonce(CBlock* pblock)
     pblock->CheckProofOfWork(true, true);
 
     boost::system_time checkblktime = boost::get_system_time() + boost::posix_time::seconds(5);
-    while (chainActive.Tip() == tip && !pblock->ProofAvailable() && pblock->IsSolving()) {
+    while (!ShutdownRequested() && chainActive.Tip() == tip && !pblock->ProofAvailable() && pblock->IsSolving()) {
         cvBlockChange.timed_wait(lock, checkblktime);
         checkblktime += boost::posix_time::seconds(5);
         LogPrintf("processNonce: same tip: %s, got proof: %s, is solving: %s\n", chainActive.Tip() == tip ? "true" : "false", pblock->ProofAvailable() ? "true" : "false", pblock->IsSolving() ? "true" : "false");
@@ -138,10 +138,12 @@ UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbaseScript, int nGen
                 IncrementExtraNonce(pblock, chainActive.Tip(), nExtraNonce);
             }
             while (nMaxTries > 0 && pblock->nNonce < nInnerLoopCount && (!processNonce(pblock) || !CheckProofOfWork(pblock->GetHash(), pblock->nBits, Params().GetConsensus()))) {
+                if (ShutdownRequested()) break;
                 printf("[mining] incrementing nonce (hash=%s, CheckPOW=%s)\n", pblock->GetHash().ToString().c_str(), CheckProofOfWork(pblock->GetHash(), pblock->nBits, Params().GetConsensus()) ? "true" : "false");
                 ++pblock->nNonce;
                 --nMaxTries;
             }
+            if (ShutdownRequested()) break;
             if (nMaxTries == 0) {
                 break;
             }
