@@ -160,8 +160,8 @@ UniValue generateBlocks(std::shared_ptr<CReserveScript> coinbaseScript, int nGen
                 coinbaseScript->KeepScript();
             }
         }
+        return blockHashes;
     }
-    return blockHashes;
 }
 
 UniValue generatetoaddress(const JSONRPCRequest& request)
