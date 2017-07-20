@@ -57,6 +57,7 @@
  */
 
 CCriticalSection cs_main;
+CCriticalSection cs_miner;
 
 BlockMap mapBlockIndex;
 CChain chainActive;
