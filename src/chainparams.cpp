@@ -18,8 +18,7 @@
 
 static bool DetermineNonceRequired(CBlock block, uint32_t nBits)
 {
-    arith_uint256 bnTarget;
-    bool fNegative;
+    arith_uint256 bnTarget;1    bool fNegative;
     bool fOverflow;
     bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
     return !block.CheckProofOfWork() || bnTarget <= UintToArith256(block.GetHash());
@@ -257,10 +256,10 @@ public:
         strNetworkID = "bc2";
         consensus.nSubsidyHalvingInterval = 210000;
         consensus.nFIRDiffFilterThreshold = 0;
-        consensus.BIP34Height = 0;
+        consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
-        consensus.BIP65Height = 0; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
-        consensus.BIP66Height = 0; // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
+        consensus.BIP65Height = 1; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
+        consensus.BIP66Height = 1; // 00000000000000000379eaa19dce8c9b722d46ae6a57c2f1a988119488b50931
         consensus.powLimit = uint256S("7fffff0000000000000000000000000000000000000000000000000000000000");
         consensus.nPowOriginalTargetTimespan = 60 * 60; // 1 hour
         consensus.nPowFilteredTargetTimespan = 15 * 60; // 15 minutes
