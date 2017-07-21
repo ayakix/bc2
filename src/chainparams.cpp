@@ -18,7 +18,8 @@
 
 static bool DetermineNonceRequired(CBlock block, uint32_t nBits)
 {
-    arith_uint256 bnTarget;1    bool fNegative;
+    arith_uint256 bnTarget;
+    bool fNegative;
     bool fOverflow;
     bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
     return !block.CheckProofOfWork() || bnTarget <= UintToArith256(block.GetHash());
