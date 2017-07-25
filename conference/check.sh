@@ -195,9 +195,14 @@ fi
 ok "${GMP}が存在します"
 
 GOTGMPVER=$(echo ${GMPINFO} | grep "^${GMP}" | sed -e "${GMPVERPTN}")
-EXPGMPVER="6.1.2"
+EXPGMPVER="6.1.1"
+GOTGMPARR=($(IFS='.';echo $GOTGMPVER))
+EXPGMPARR=($(IFS='.';echo $EXPGMPVER))
 
-if [ "${GOTGMPVER:0:${#EXPGMPVER}}" != "$EXPGMPVER" ]; then
+if [ ${#GOTGMPARR[@]} -ne ${#EXPGMPARR[@]} ] ||
+   [ ${GOTGMPARR[0]} -ne ${EXPGMPARR[0]} ] ||
+   [ ${GOTGMPARR[1]} -ne ${EXPGMPARR[1]} ] ||
+   [ ${GOTGMPARR[2]} -lt ${EXPGMPARR[2]} ]; then
     warn "gmpのバージョンが想定外です。"
     warn "  現在：$GOTGMPVER"
     warn "  想定：$EXPGMPVER"
