@@ -56,9 +56,9 @@ function execchk()
 function appchk()
 {
     BC2PATH=$BC2CHECKPATH/../$1
-    PRODUCT=$1
-    TARGET=$2
-    VERSIONROOT=$3
+    PRODUCT=$2
+    TARGET=$3
+    VERSIONROOT=$4
     cd $BC2PATH && BC2PATH=$(pwd)
     print "BC2フォルダー: $COL_BLUE$BC2PATH"
     
@@ -171,8 +171,8 @@ fi
 FULLPATH=$PWD/$DIRNAME
 BC2CHECKPATH=${FULLPATH:0:$((${#FULLPATH}-11))}
 
-appchk "bitcoin" "bc2" "BC2-Bitcoin Core RPC client version v0.14.99.0"
-appchk "elements" "elements-bc2" "BC2-Elements Core RPC client version v0.14.1.0"
+appchk "bc2" "bitcoin" "bc2" "BC2-Bitcoin Core RPC client version v0.14.99.0"
+appchk "elements" "elements" "elements-bc2" "BC2-Elements Core RPC client version v0.14.1.0"
 
 print "gmp"
 case "${HOST_OS}" in
