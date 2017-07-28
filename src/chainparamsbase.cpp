@@ -105,7 +105,7 @@ void SelectBaseParams(const std::string& chain)
 
 std::string ChainNameFromCommandLine()
 {
-    bool fBC2 = GetBoolArg("-bc2", true);
+    bool fBC2 = GetBoolArg("-bc2", false);
     bool fRegTest = GetBoolArg("-regtest", false);
     bool fTestNet = GetBoolArg("-testnet", false);
     int nets = fBC2 + fRegTest + fTestNet;
@@ -118,5 +118,5 @@ std::string ChainNameFromCommandLine()
         return CBaseChainParams::TESTNET;
     if (fBC2)
         return CBaseChainParams::BC2;
-    return CBaseChainParams::MAIN;
+    return CBaseChainParams::BC2;
 }
